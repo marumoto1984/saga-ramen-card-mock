@@ -1,0 +1,282 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SAGAラーメンカード｜3店プロトタイプ</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Zen+Old+Mincho:wght@400;500;700;900&family=Shippori+Mincho:wght@500;600;700;800&family=Bebas+Neue&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --ink:#171513; --sumi:#2b2724; --ashi:#8d847a;
+    --paper:#fbf9f5; --card:#ffffff;
+    --saga:#bb3326; --saga-deep:#9c281d; --nori:#1f3a2e;
+    --line:#d8d4ce; --tagbg:#ffffff; --gold:#b08a3e;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{
+    font-family:"Shippori Mincho",serif;color:var(--ink);
+    background:
+      radial-gradient(circle at 20% 0%, #fff 0%, transparent 45%),
+      radial-gradient(circle at 90% 100%, #f3ede1 0%, transparent 50%),
+      var(--paper);
+    background-attachment:fixed;min-height:100vh;-webkit-font-smoothing:antialiased;
+  }
+  body::before{
+    content:"";position:fixed;inset:0;pointer-events:none;z-index:0;opacity:.04;
+    background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='3'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  }
+  .wrap{position:relative;z-index:1;max-width:1180px;margin:0 auto;padding:48px 28px 90px}
+  header{margin-bottom:28px}
+  .kicker{font-family:"Bebas Neue",sans-serif;letter-spacing:.28em;font-size:14px;color:var(--saga);margin-bottom:6px}
+  h1{font-family:"Zen Old Mincho",serif;font-weight:900;font-size:clamp(28px,4.5vw,44px);line-height:1.08}
+  h1 .en{font-family:"Bebas Neue",sans-serif;letter-spacing:.04em;color:var(--saga)}
+  .lead{margin-top:14px;max-width:720px;color:var(--sumi);font-size:14.5px;line-height:1.9}
+  .lead b{color:var(--saga-deep);font-weight:700}
+
+  .grid{display:grid;grid-template-columns:repeat(3,1fr);gap:30px;margin-top:8px}
+  @media(max-width:860px){.grid{grid-template-columns:1fr;max-width:380px;margin:8px auto 0}}
+
+  /* カード（ラフ準拠：縦長63:88、外枠＋内額装） */
+  .card{
+    position:relative;background:var(--card);border-radius:20px;
+    border:2.5px solid var(--line);
+    box-shadow:0 1px 0 #fff inset, 0 20px 44px -22px rgba(40,30,20,.45), 0 5px 14px -9px rgba(0,0,0,.22);
+    padding:22px 20px 16px;display:flex;flex-direction:column;
+    aspect-ratio:63/88;transition:transform .25s, box-shadow .25s;
+  }
+  .card:hover{transform:translateY(-7px) rotate(-.4deg);
+    box-shadow:0 1px 0 #fff inset,0 30px 54px -20px rgba(40,30,20,.5),0 9px 20px -11px rgba(0,0,0,.26)}
+
+  /* ① 店名 + ② SR */
+  .c-top{display:flex;justify-content:space-between;align-items:flex-start;gap:8px}
+  .c-name{font-family:"Zen Old Mincho",serif;font-weight:900;font-size:24px;line-height:1.12;letter-spacing:.02em;padding-top:4px}
+  .c-name .sub{display:block;font-size:11px;color:var(--ashi);font-weight:500;margin-top:3px;letter-spacing:.05em}
+  .sr{font-family:"Bebas Neue",sans-serif;font-size:46px;line-height:.78;color:var(--ink);
+    font-style:italic;transform:skewX(-9deg);flex-shrink:0;letter-spacing:-.01em}
+
+  /* ③ タグ（右寄せ・ピル型・所在地/味系統/+α） */
+  .c-tags{display:flex;gap:8px;justify-content:flex-end;margin:10px 0 14px}
+  .tg{
+    border:1px solid var(--line);border-radius:20px;background:var(--tagbg);
+    font-size:11px;font-weight:700;color:var(--sumi);
+    padding:5px 13px;white-space:nowrap;line-height:1;
+  }
+
+  /* ④ ビジュアル枠（大） */
+  .c-vis{
+    flex:1;border-radius:6px;
+    background:#f4f1ec;
+    border:2px solid var(--line);
+    display:flex;align-items:center;justify-content:center;
+    color:var(--ashi);font-size:11px;letter-spacing:.06em;min-height:150px;
+  }
+  .c-vis span{background:rgba(255,255,255,.75);padding:4px 11px;border-radius:20px;border:1px solid var(--line)}
+
+  /* ⑤ フレーバー（STORY / FLAVOR ラベル付き枠） */
+  .c-flavor{
+    margin-top:14px;border:2px solid var(--line);border-radius:6px;
+    padding:13px 15px 14px;
+  }
+  .fl-block + .fl-block{margin-top:11px}
+  .fl-lbl{
+    font-family:"Bebas Neue",sans-serif;letter-spacing:.18em;font-size:11px;
+    color:var(--saga);margin-bottom:4px;display:block;
+  }
+  .fl-block.flavor .fl-lbl{color:var(--nori)}
+  .fl-txt{font-size:12.5px;line-height:1.7;color:var(--sumi);font-weight:500}
+
+  /* ⑥ フッター */
+  .c-foot{margin-top:12px;text-align:right;
+    font-family:"Bebas Neue",sans-serif;letter-spacing:.18em;font-size:10px;color:var(--ashi)}
+
+  .notes{margin-top:46px;border-top:2px solid var(--ink);padding-top:22px}
+  .notes h4{font-family:"Zen Old Mincho",serif;font-size:18px;margin-bottom:12px}
+  .notes ol{list-style:none;counter-reset:n}
+  .notes li{counter-increment:n;position:relative;padding:11px 0 11px 40px;border-bottom:1px dashed var(--line);font-size:13.5px;line-height:1.8;color:var(--sumi)}
+  .notes li::before{content:counter(n);position:absolute;left:0;top:11px;width:26px;height:26px;border-radius:50%;background:var(--saga);color:#fff;font-family:"Bebas Neue",sans-serif;font-size:14px;display:flex;align-items:center;justify-content:center}
+  .notes li b{color:var(--saga-deep)}
+  .src{margin-top:18px;font-size:11.5px;color:var(--ashi);line-height:1.7}
+
+  /* ── 要素説明セクション ── */
+  .spec{margin:8px 0 50px}
+  .spec-head{font-family:"Zen Old Mincho",serif;font-size:20px;font-weight:900;margin-bottom:4px}
+  .spec-sub{font-size:13px;color:var(--ashi);margin-bottom:22px;line-height:1.7}
+  .spec-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px 26px}
+  @media(max-width:760px){.spec-grid{grid-template-columns:1fr}}
+  .spec-item{display:flex;gap:14px;padding:14px 0;border-top:1px solid var(--line)}
+  .spec-no{
+    flex-shrink:0;width:30px;height:30px;border-radius:50%;
+    background:var(--saga);color:#fff;font-family:"Bebas Neue",sans-serif;font-size:16px;
+    display:flex;align-items:center;justify-content:center;margin-top:2px;
+  }
+  .spec-body .t{font-family:"Zen Old Mincho",serif;font-weight:700;font-size:15px;margin-bottom:5px;color:var(--ink)}
+  .spec-body .d{font-size:13px;line-height:1.8;color:var(--sumi)}
+  .spec-body .d b{color:var(--saga-deep);font-weight:700}
+
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <div class="kicker">SAGA RAMEN CARD ／ PROTOTYPE 14 SHOPS</div>
+    <h1>SAGAラーメンカード <span class="en">14 SHOPS</span></h1>
+    <p class="lead">
+      トレカ対象14店のプロトタイプ。タグは <b>［所在地／味系統／+α］</b>、
+      フレーバーは <b>STORY（物語）＝上／FLAVOR（味）＝下</b> の2ブロック構成。テキストは公式note拠り所で編集。
+    </p>
+  </header>
+
+  <div class="grid" id="grid"></div>
+
+
+  <section class="spec">
+    <div class="spec-head">カードの構成について</div>
+    <div class="spec-sub">県庁・各店向けに、6つの構成要素と、それぞれの狙いをまとめます。</div>
+    <div class="spec-grid">
+      <div class="spec-item"><div class="spec-no">1</div><div class="spec-body">
+        <div class="t">① 店名</div>
+        <div class="d">カードの主役。各店の屋号をそのまま大きく配置します。地域に親しまれた呼び名を尊重し、ブランドの「顔」として一目で識別できるようにします。</div>
+      </div></div>
+      <div class="spec-item"><div class="spec-no">2</div><div class="spec-body">
+        <div class="t">② レア度（SR）</div>
+        <div class="d">トレーディングカードでおなじみの「レアリティ表記」を遊び心として採用。本企画では全カードを最高位の「SR」で統一します。これは <b>Saga Ramen</b>（佐賀ラーメン）の頭文字でもあり、「佐賀のラーメンはどれも一級品」という想いを込めた、優劣をつけない設計です。</div>
+      </div></div>
+      <div class="spec-item"><div class="spec-no">3</div><div class="spec-body">
+        <div class="t">③ タグ（3項目）</div>
+        <div class="d">そのお店を端的に表す3つのキーワード。左から〈所在地〉〈味の系統〉<b>〈+α（お店ならではの個性・出自など）〉</b>の順で並べます。集めて見比べたとき、佐賀ラーメンの多彩さ（豚骨・塩・二郎系…）と、県内各地に名店が点在することが直感的に伝わる仕掛けです。</div>
+      </div></div>
+      <div class="spec-item"><div class="spec-no">4</div><div class="spec-body">
+        <div class="t">④ ビジュアル</div>
+        <div class="d"><b>店主がこだわりの一杯を両手で差し出すポートレート</b>を中心に据えます。つくり手の人柄・佇まいと、湯気の立つラーメンのシズル感（照り・具材の質感）を一枚に収め、「このお店のこの人が、この一杯をつくっている」という物語を視覚で伝えます。撮影した実写を使用します。</div>
+      </div></div>
+      <div class="spec-item"><div class="spec-no">5</div><div class="spec-body">
+        <div class="t">⑤ フレーバーテキスト</div>
+        <div class="d">お店の魅力を伝える短い紹介文。上段〈STORY〉でお店の歴史や人の物語を、下段〈FLAVOR〉で一杯の味の特徴を語ります。公式note記事の取材内容をもとに編集し、来店・周遊につなげる導線にします。</div>
+      </div></div>
+      <div class="spec-item"><div class="spec-no">6</div><div class="spec-body">
+        <div class="t">⑥ SAGA RAMEN PROJECT</div>
+        <div class="d">全カード共通のフッター表記（固定）。一枚一枚が本プロジェクトの公式カードであることを示し、シリーズとしての統一感と信頼性を担保します。</div>
+      </div></div>
+    </div>
+  </section>
+
+  <div class="notes">
+    <h4>メモ</h4>
+    <ol>
+      <li><b>STORY→FLAVORの順で固定。</b>上2行で店の物語に引き込み、下2行で一杯の味に着地させる構成。プロのグルメ記事のリード→描写の流れ。</li>
+      <li><b>フレーバーは公式note拠り所で編集。</b>竜里＝一竜軒の継承／むらまさ＝佐野実の塩／夢を語れ＝二郎系×夢を語る文化。各店の「これしかない」核を立てた。</li>
+      <li><b>ラベルのタイポ修正済み。</b>ラフの「STOEY」→正しく「STORY」。フッターも「SAGA RAMEN PROJECT」（N入り）。</li>
+      <li><b>撮影で差し替えるのは数値のみ。</b>価格・麺量・看板メニュー名は現場確定。味コアはnoteで確定済み。</li>
+    </ol>
+    <p class="src">出典：SAGAラーメンプロジェクト公式note（夢を語れ n1625db538a2d／むらまさ nf33b26b04108／竜里 n10a5844c0f95）。撮影後に最新の価格・メニュー名で更新のこと。</p>
+  </div>
+</div>
+
+<script>
+const cards = [
+  {
+    name:"夢を語れ", sub:"鳥栖総本店",
+    tags:["鳥栖","豚骨醤油","二郎系"],
+    story:"青いベルを鳴らし、丼を前に夢を語る。ボストンで根づいた文化を受け継ぐ、二郎系の総本店。",
+    flavor:"太ちぢれ麺に、かえしの効いた極厚スープ。麺も豚も野菜もマシマシの、圧倒的な一杯。"
+  },
+  {
+    name:"らぁ麺 むらまさ", sub:"",
+    tags:["唐津","塩・清湯","佐野実監修"],
+    story:"豚骨の本場・唐津で、〝ラーメンの鬼〟佐野実が選んだのは塩。最後に遺した、唐津のいつもの一杯。",
+    flavor:"みつせ鶏とアゴ、昆布が織りなす雑味のない清湯。派手さを削ぎ落とした、澄んだ一杯。"
+  },
+  {
+    name:"竜里", sub:"",
+    tags:["唐津","濃厚豚骨","一竜軒系譜"],
+    story:"唐津が愛した伝説の名店「一竜軒」。その味を継いだのは、麺を卸していた製麺屋の店主だった。",
+    flavor:"豚骨と鶏がらを炊き込んだスープは、本家よりさらに濃く。丼の底に沈む骨の髄が、その深さを物語る。"
+  },
+  {
+    name:"マキザラーメン", sub:"",
+    tags:["佐賀","豚骨","創作系"],
+    story:"家具職人に憧れた青年が、丼の中に自己表現の場を見つけた。「佐賀にないもの」を作り続ける創作の発信地。",
+    flavor:"きめ細かく濾したシルキーな豚骨が土台。椎茸、トムヤムクン、ベジポタ——季節ごとに新しい味が生まれる。"
+  },
+  {
+    name:"一休軒", sub:"若楠",
+    tags:["佐賀","豚骨","佐賀の源流"],
+    story:"チャーシューと海苔だけ。そのシンプルさが、佐賀ラーメンの原型になった。味を継ぐのは三代目。",
+    flavor:"余計なものを削ぎ、スープで勝負する一杯。佐賀名物の「生卵」も、この系譜から生まれたという。"
+  },
+  {
+    name:"ひろちゃんラーメン", sub:"",
+    tags:["佐賀","濃厚豚骨","博多系"],
+    story:"博多で出会った豚骨に惚れ込んだ店主。羽釜と向き合い、こだわり抜いた超濃厚スープを今日も立ち上げる。",
+    flavor:"泡立つほど炊き込んだ、猛々しい超濃厚豚骨。香ばしく炒めたもやしが、油の甘みに重なる。"
+  },
+  {
+    name:"麺家 ぶらっくぴっぐ", sub:"",
+    tags:["佐賀","濃厚豚骨","米国進出"],
+    story:"「SAGA」の名を掲げ、いざアメリカへ。ミシュランに載った濃厚豚骨が、海の向こうを目指す。",
+    flavor:"ゲンコツを一本ずつ砕き、大寸胴で炊き上げる濃密な豚骨。合わせるのは、しなやかなコシの自家製中細麺。"
+  },
+  {
+    name:"後楽園本店", sub:"",
+    tags:["多久","豚骨","町中華"],
+    story:"「もっとメニューを増やしたら」。製麺所のひと言を素直に受け止め、品書きを広げていった多久のロードサイド。",
+    flavor:"頭骨とゲンコツで炊いた豚骨を土台に、チャンポンも焼きそばも並ぶ。迷う楽しさごと味わえる。"
+  },
+  {
+    name:"来久軒", sub:"",
+    tags:["武雄","豚骨","洋食出身"],
+    story:"名古屋のホテルで腕を磨いた料理人が、武雄で選んだのは焼鳥、そしてラーメン。異色の経歴を持つ店主が炊く。",
+    flavor:"洋食仕込みの手が生む、洗練された乳白の豚骨。雑味を抑え、まろやかな口当たりにまとめあげた。"
+  },
+  {
+    name:"東洋軒", sub:"",
+    tags:["佐賀","豚骨","母娘の味"],
+    story:"昭和・平成・令和と、母から娘へ。三代の女性たちが「自然体」で守り続ける、佐賀でも最古参の一軒。",
+    flavor:"グイグイ来ず、芯に強さを秘めた優しい豚骨。後から加わった豚骨ベースのみそも、県外にファンを広げる。"
+  },
+  {
+    name:"夢の一歩", sub:"佐賀店",
+    tags:["佐賀","豚骨醤油","二郎系"],
+    story:"鳥栖「夢を語れ」から枝分かれした、佐賀のスピンオフ。二郎系の熱量を、平和通り沿いへと持ち込んだ。",
+    flavor:"野菜、ニンニク、背脂。コールで仕上げる山盛りの一杯に、豚の旨みが詰まったかえしが効く。"
+  },
+  {
+    name:"民芸茶屋シャローム", sub:"",
+    tags:["佐賀","あっさり豚骨","佐賀最古"],
+    story:"1953年、佐賀で最初に暖簾を上げた一軒。「自分のところで全部つくる」民藝の思想が、いまも息づく。",
+    flavor:"脂を引いた、あっさりの白濁豚骨。名物の清涼麺は、海苔を練り込んだ自家製麺を和だしでいただく逸品。"
+  },
+  {
+    name:"丸幸ラーメンセンター", sub:"",
+    tags:["基山","豚骨","久留米系"],
+    story:"1965年、国道3号沿いに開業。久留米の名店「幸陽軒」をルーツに、トラック運転手たちが愛した大型店。",
+    flavor:"豚骨100%を強火で炊いた、とろみのある濃厚スープ。のどごしのよい中細ストレート麺が、よく合う。"
+  },
+  {
+    name:"佐賀秀ちゃんラーメン", sub:"",
+    tags:["白石","濃厚豚骨","三代継承"],
+    story:"突然倒れた初代の味を、二代目が継いだ。命日には父の遺影へ一杯を捧げる、三世代をつなぐ物語。",
+    flavor:"豚骨濃度の高い、力強いスープ。受け止めるのは、佐賀でも屈指の細さを誇る麺。"
+  }
+];
+function cardHTML(c){
+  return `<div class="card">
+    <div class="c-top">
+      <div class="c-name">${c.name}${c.sub?`<span class="sub">${c.sub}</span>`:""}</div>
+      <div class="sr">SR</div>
+    </div>
+    <div class="c-tags">${c.tags.map(t=>`<span class="tg">${t}</span>`).join("")}</div>
+    <div class="c-vis"><span>④ ラーメン写真（撮影で差込）</span></div>
+    <div class="c-flavor">
+      <div class="fl-block story"><span class="fl-lbl">STORY</span><div class="fl-txt">${c.story}</div></div>
+      <div class="fl-block flavor"><span class="fl-lbl">FLAVOR</span><div class="fl-txt">${c.flavor}</div></div>
+    </div>
+    <div class="c-foot">SAGA RAMEN PROJECT</div>
+  </div>`;
+}
+document.getElementById("grid").innerHTML = cards.map(cardHTML).join("");
+</script>
+</body>
+</html>
