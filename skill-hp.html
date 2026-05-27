@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SAGAラーメンカード｜技+HP版</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Zen+Old+Mincho:wght@400;500;700;900&family=Shippori+Mincho:wght@500;600;700;800&family=Bebas+Neue&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --ink:#171513; --sumi:#2b2724; --ashi:#8d847a;
+    --paper:#fbf9f5; --card:#ffffff;
+    --saga:#bb3326; --saga-deep:#9c281d; --nori:#1f3a2e;
+    --line:#d8d4ce; --gold:#b08a3e; --atk:#bb3326; --hp:#1f3a2e;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{font-family:"Shippori Mincho",serif;color:var(--ink);
+    background:radial-gradient(circle at 20% 0%, #fff 0%, transparent 45%),radial-gradient(circle at 90% 100%, #f3ede1 0%, transparent 50%),var(--paper);
+    background-attachment:fixed;min-height:100vh;-webkit-font-smoothing:antialiased}
+  body::before{content:"";position:fixed;inset:0;pointer-events:none;z-index:0;opacity:.04;
+    background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='3'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E")}
+  .wrap{position:relative;z-index:1;max-width:1180px;margin:0 auto;padding:48px 28px 90px}
+  header{margin-bottom:28px}
+  .kicker{font-family:"Bebas Neue",sans-serif;letter-spacing:.28em;font-size:14px;color:var(--saga);margin-bottom:6px}
+  h1{font-family:"Zen Old Mincho",serif;font-weight:900;font-size:clamp(28px,4.5vw,44px);line-height:1.08}
+  h1 .en{font-family:"Bebas Neue",sans-serif;letter-spacing:.04em;color:var(--saga)}
+  .lead{margin-top:14px;max-width:720px;color:var(--sumi);font-size:14.5px;line-height:1.9}
+  .lead b{color:var(--saga-deep);font-weight:700}
+  .grid{display:grid;grid-template-columns:repeat(3,1fr);gap:30px;margin-top:8px}
+  @media(max-width:860px){.grid{grid-template-columns:1fr;max-width:400px;margin:8px auto 0}}
+  .card{position:relative;background:var(--card);border-radius:20px;border:2.5px solid var(--line);
+    box-shadow:0 1px 0 #fff inset, 0 20px 44px -22px rgba(40,30,20,.45), 0 5px 14px -9px rgba(0,0,0,.22);
+    padding:22px 20px 16px;display:flex;flex-direction:column;aspect-ratio:63/108;transition:transform .25s, box-shadow .25s}
+  .card:hover{transform:translateY(-7px) rotate(-.4deg);box-shadow:0 1px 0 #fff inset,0 30px 54px -20px rgba(40,30,20,.5),0 9px 20px -11px rgba(0,0,0,.26)}
+  .c-top{display:flex;justify-content:space-between;align-items:flex-start;gap:8px}
+  .c-name{font-family:"Zen Old Mincho",serif;font-weight:900;font-size:23px;line-height:1.12;letter-spacing:.02em;padding-top:4px}
+  .c-name .sub{display:block;font-size:11px;color:var(--ashi);font-weight:500;margin-top:3px}
+  .sr{font-family:"Bebas Neue",sans-serif;font-size:44px;line-height:.78;color:var(--ink);font-style:italic;transform:skewX(-9deg);flex-shrink:0}
+  .c-tags{display:flex;gap:8px;justify-content:flex-end;margin:10px 0 12px;flex-wrap:wrap}
+  .tg{border:1px solid var(--line);border-radius:20px;background:#fff;font-size:11px;font-weight:700;color:var(--sumi);padding:5px 13px;white-space:nowrap;line-height:1}
+  .c-vis{position:relative;flex:1;border-radius:6px;background:#f4f1ec;border:2px solid var(--line);display:flex;align-items:center;justify-content:center;color:var(--ashi);font-size:11px;letter-spacing:.06em;min-height:118px}
+  .c-vis span{color:var(--ashi);font-size:11px}
+  .hp-badge{position:absolute;right:6px;bottom:8px;display:flex;align-items:baseline;gap:8px;
+    background:#3d3936;color:#fff;padding:8px 16px 8px 18px;
+    font-family:"Bebas Neue",sans-serif;line-height:1;
+    box-shadow:0 3px 8px -3px rgba(0,0,0,.35)}
+  .hp-badge .lbl{font-size:15px;letter-spacing:.04em;color:#fff}
+  .hp-badge .val{font-size:26px;font-style:italic;letter-spacing:-.01em;color:#fff;font-weight:700}
+  .skills{margin-top:13px;border-top:2px solid var(--ink);padding-top:11px}
+  .skill{display:grid;grid-template-columns:auto 1fr auto;align-items:flex-start;gap:10px;padding:7px 0}
+  .sk-ico{width:30px;height:30px;border-radius:50%;display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:13px;font-family:"Bebas Neue",sans-serif;color:#fff;letter-spacing:.02em;margin-top:2px;background:var(--atk)}
+  .sk-body{min-width:0}
+  .sk-name{font-family:"Zen Old Mincho",serif;font-weight:700;font-size:17px;line-height:1.2;letter-spacing:.01em}
+  .sk-flavor{font-size:11px;line-height:1.55;color:var(--sumi);margin-top:3px;font-weight:500}
+  .sk-pow{font-family:"Bebas Neue",sans-serif;font-size:40px;line-height:.8;color:var(--gold);font-style:italic;text-shadow:1px 1px 0 rgba(176,138,62,.2);flex-shrink:0;letter-spacing:-.02em}
+  .c-story{margin-top:10px;border-top:1px solid var(--line);padding-top:10px;font-size:11.5px;line-height:1.66;color:var(--sumi);font-weight:500}
+  .c-foot{margin-top:11px;text-align:right;font-family:"Bebas Neue",sans-serif;letter-spacing:.18em;font-size:10px;color:var(--ashi)}
+  .notes{margin-top:46px;border-top:2px solid var(--ink);padding-top:22px}
+  .notes h4{font-family:"Zen Old Mincho",serif;font-size:18px;margin-bottom:12px}
+  .notes p{font-size:13.5px;line-height:1.9;color:var(--sumi);max-width:760px;margin-bottom:8px}
+  .notes b{color:var(--saga-deep)}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <div class="kicker">SAGA RAMEN CARD ／ SKILL + HP VERSION</div>
+    <h1>SAGAラーメンカード <span class="en">SKILL + HP VER. 14</span></h1>
+    <p class="lead">
+      技統合版にHP追加。<b>HPは200〜280</b>、ATK最高値190より高く設定し<b>一撃で他カードが落ちない</b>ようバランス。HPは「歴史・系譜・継承の厚み」を反映、ATKは「一杯のインパクト」を反映。
+    </p>
+  </header>
+  <div class="grid" id="grid"></div>
+  <div class="notes">
+    <h4>メモ</h4>
+    <p>
+      <b>数値設計</b>：ATKは130〜190、HPは200〜280。最高ATK(190) < 最低HP(200)なので、どの組み合わせでも一撃死は起きない。
+    </p>
+    <p>
+      <b>HPの意味</b>：「歴史の厚み・系譜の太さ・継承の重み」を反映。シャローム(1953年・佐賀最古)が最高HP280、丸幸(1965年・大型店)270、一休軒・東洋軒(三代継承)260。新興・攻めの店はHP低めだがATK高め、という個性の出方。
+    </p>
+    <p>
+      <b>地域タグ修正</b>：「佐賀」→「佐賀市」のように市町まで明記。<b>基山町・白石町</b>のように「町」も省略しない。
+    </p>
+  </div>
+</div>
+<script>
+const cards = [
+  {name:"夢を語れ", sub:"鳥栖総本店", hp:230, tags:["鳥栖市","豚骨醤油","二郎系"],
+   atk:{name:"マシマシコール", pow:180},
+   story:"青いベルを鳴らし、丼を前に夢を語る。ボストンで根づいた文化を受け継ぐ、二郎系の総本店。",
+   flavor:"太ちぢれ麺に、かえしの効いた極厚スープ。マシマシでも完食できる一杯。"},
+  {name:"らぁ麺 むらまさ", sub:"", hp:220, tags:["唐津市","塩・清湯","佐野実監修"],
+   atk:{name:"玄界灘の清湯", pow:150},
+   story:"豚骨の本場・唐津で、〝ラーメンの鬼〟佐野実が選んだのは塩。最後に遺した、唐津のいつもの一杯。",
+   flavor:"みつせ鶏とアゴ、昆布が織りなす清湯。雑味なく澄んだ一杯。"},
+  {name:"竜里", sub:"", hp:220, tags:["唐津市","濃厚豚骨","一竜軒系譜"],
+   atk:{name:"呼び戻し", pow:170},
+   story:"唐津が愛した伝説の名店「一竜軒」。その味を継いだのは、麺を卸していた製麺屋の店主だった。",
+   flavor:"豚骨と鶏がらを炊き重ねたスープは、本家よりさらに濃く。"},
+  {name:"マキザラーメン", sub:"", hp:200, tags:["佐賀市","豚骨","創作系"],
+   atk:{name:"シルキー創作", pow:160},
+   story:"家具職人に憧れた青年が、丼の中に自己表現の場を見つけた。「佐賀にないもの」を作り続ける創作の発信地。",
+   flavor:"シルキーな豚骨に、椎茸やトムヤムクン。季節ごとに新しい味。"},
+  {name:"一休軒", sub:"若楠", hp:250, tags:["佐賀市","豚骨","佐賀の源流"],
+   atk:{name:"原点の一杯", pow:150},
+   story:"チャーシューと海苔だけ。そのシンプルさが、佐賀ラーメンの原型になった。味を継ぐのは三代目。",
+   flavor:"余計を削ぎ、スープで勝負する一杯。佐賀名物「生卵」もこの系譜から。"},
+  {name:"ひろちゃんラーメン", sub:"", hp:210, tags:["佐賀市","濃厚豚骨","博多系"],
+   atk:{name:"泡立つ豚骨", pow:190},
+   story:"博多で出会った豚骨に惚れ込んだ店主。羽釜と向き合い、こだわり抜いた超濃厚スープを今日も立ち上げる。",
+   flavor:"泡立つほど炊いた、猛々しい超濃厚豚骨。香ばしいもやしが重なる。"},
+  {name:"麺家 ぶらっくぴっぐ", sub:"", hp:200, tags:["佐賀市","濃厚豚骨","米国進出"],
+   atk:{name:"砕きの一撃", pow:190},
+   story:"「SAGA」の名を掲げ、いざアメリカへ。ミシュランに載った濃厚豚骨が、海の向こうを目指す。",
+   flavor:"ゲンコツを砕いて炊く濃密な豚骨に、コシのある自家製中細麺。"},
+  {name:"後楽園本店", sub:"", hp:230, tags:["多久市","豚骨","町中華"],
+   atk:{name:"迷う楽しさ", pow:150},
+   story:"「もっとメニューを増やしたら」。製麺所のひと言を素直に受け止め、品書きを広げていった多久のロードサイド。",
+   flavor:"豚骨を土台に、チャンポンも焼きそばも。迷う楽しさごと味わう。"},
+  {name:"来久軒", sub:"", hp:210, tags:["武雄市","豚骨","洋食出身"],
+   atk:{name:"洗練の乳白", pow:150},
+   story:"名古屋のホテルで腕を磨いた料理人が、武雄で選んだのは焼鳥、そしてラーメン。異色の経歴を持つ店主が炊く。",
+   flavor:"洋食仕込みの手が生む、洗練された乳白の豚骨。まろやかな口当たり。"},
+  {name:"東洋軒", sub:"", hp:240, tags:["佐賀市","豚骨","母娘の味"],
+   atk:{name:"優しい一杯", pow:140},
+   story:"昭和・平成・令和と、母から娘へ。三代の女性たちが「自然体」で守り続ける、佐賀でも最古参の一軒。",
+   flavor:"芯に強さを秘めた優しい豚骨。豚骨ベースのみそも県外で人気。"},
+  {name:"夢の一歩", sub:"佐賀店", hp:200, tags:["佐賀市","豚骨醤油","二郎系"],
+   atk:{name:"背脂マウンテン", pow:180},
+   story:"鳥栖「夢を語れ」から枝分かれした、佐賀のスピンオフ。二郎系の熱量を、平和通り沿いへと持ち込んだ。",
+   flavor:"野菜、ニンニク、背脂。コールで仕上げる山盛りの一杯。"},
+  {name:"民芸茶屋シャローム", sub:"", hp:260, tags:["佐賀市","あっさり豚骨","佐賀最古"],
+   atk:{name:"清涼麺", pow:130},
+   story:"1953年、佐賀で最初に暖簾を上げた一軒。「自分のところで全部つくる」民藝の思想が、いまも息づく。",
+   flavor:"あっさりの白濁豚骨。名物の清涼麺は、自家製麺を和だしで。"},
+  {name:"丸幸ラーメンセンター", sub:"", hp:250, tags:["基山町","豚骨","久留米系"],
+   atk:{name:"純豚骨百%", pow:170},
+   story:"1965年、国道3号沿いに開業。久留米の名店「幸陽軒」をルーツに、トラック運転手たちが愛した大型店。",
+   flavor:"豚骨100%を強火で炊いた濃厚スープに、中細ストレート麺。"},
+  {name:"佐賀秀ちゃんラーメン", sub:"", hp:230, tags:["白石町","濃厚豚骨","三代継承"],
+   atk:{name:"極細ストレート", pow:180},
+   story:"突然倒れた初代の味を、二代目が継いだ。命日には父の遺影へ一杯を捧げる、三世代をつなぐ物語。",
+   flavor:"豚骨濃度の高い力強いスープを、佐賀屈指の細麺で受け止める。"}
+];
+function cardHTML(c){
+  return `<div class="card">
+    <div class="c-top"><div class="c-name">${c.name}${c.sub?`<span class="sub">${c.sub}</span>`:""}</div><div class="sr">SR</div></div>
+    <div class="c-tags">${c.tags.map(t=>`<span class="tg">${t}</span>`).join("")}</div>
+    <div class="c-vis">
+      <span>④ 店主＋一杯(撮影で差込)</span>
+      <div class="hp-badge"><span class="lbl">HP</span><span class="val">${c.hp}</span></div>
+    </div>
+    <div class="skills">
+      <div class="skill">
+        <div class="sk-ico">技</div>
+        <div class="sk-body">
+          <div class="sk-name">${c.atk.name}</div>
+          <div class="sk-flavor">${c.flavor}</div>
+        </div>
+        <div class="sk-pow">${c.atk.pow}</div>
+      </div>
+    </div>
+    <div class="c-story">${c.story}</div>
+    <div class="c-foot">SAGA RAMEN PROJECT</div>
+  </div>`;
+}
+document.getElementById("grid").innerHTML = cards.map(cardHTML).join("");
+</script>
+</body>
+</html>
