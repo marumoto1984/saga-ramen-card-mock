@@ -323,73 +323,73 @@
 <script>
 const reels = [
   {name:"夢を語れ", area:"鳥栖市",
-   cols:["ガツン、極厚スープに", "沈む太ちぢれ麺"],
-   copySize:"8.5px", nameSize:"14px", areaSize:"6px",
+   cols:["極厚スープに、", "太ちぢれ麺"],
+   copySize:"9px", nameSize:"14px", areaSize:"6px",
    pos:"tr", rot:-2, stagger:"down", views:"1.2万"},
   
   {name:"らぁ麺 むらまさ", area:"唐津市",
-   cols:["〝ラーメンの鬼〟佐野実が、", "最後に遺した一杯"],
-   copySize:"7.5px", nameSize:"11px", areaSize:"6px",
+   cols:["みつせ鶏とアゴで、", "澄んだ塩清湯"],
+   copySize:"8.5px", nameSize:"11px", areaSize:"6px",
    pos:"tl", rot:1.5, stagger:"down", views:"8,341"},
   
   {name:"竜里", area:"唐津市",
-   cols:["炊き重ねた豚骨と鶏がら、", "唐津の濃厚"],
+   cols:["豚骨と鶏を炊き重ねた、", "唐津の濃厚"],
    copySize:"8px", nameSize:"22px", areaSize:"6px",
    pos:"tr", rot:-1, stagger:"up", views:"6,892"},
   
   {name:"マキザラーメン", area:"佐賀市",
-   cols:["野菜×豚骨で仕上げた、", "佐賀の創作ベジポタ"],
-   copySize:"8.5px", nameSize:"12px", areaSize:"6px",
+   cols:["野菜×豚骨の、", "創作ベジポタ"],
+   copySize:"9px", nameSize:"12px", areaSize:"6px",
    pos:"tl", rot:-3, stagger:"down", views:"9,103"},
   
   {name:"一休軒", area:"佐賀市",
-   cols:["佐賀ラーメンの原型となり、", "生卵文化をつくりあげた"],
-   copySize:"7.5px", nameSize:"18px", areaSize:"6px",
+   cols:["すべては、ここから。", "生卵×海苔の原点"],
+   copySize:"8.5px", nameSize:"18px", areaSize:"6px",
    pos:"tr", rot:0, stagger:"down", views:"2.3万"},
   
   {name:"ひろちゃんラーメン", area:"佐賀市",
-   cols:["ぐつぐつ泡立つ、", "猛々しい超濃厚"],
-   copySize:"9px", nameSize:"10px", areaSize:"6px",
+   cols:["泡立つほど猛々しい、", "超濃厚豚骨"],
+   copySize:"8.5px", nameSize:"10px", areaSize:"6px",
    pos:"tl", rot:2.5, stagger:"up", views:"1.5万"},
   
   {name:"麺家 ぶらっくぴっぐ", area:"佐賀市",
-   cols:["ゲンコツ砕いた、", "密度の高い豚骨"],
+   cols:["ゲンコツ砕いた、", "密度高めの豚骨"],
    copySize:"9px", nameSize:"9px", areaSize:"6px",
    pos:"tr", rot:-2, stagger:"down", views:"3.1万"},
   
   {name:"後楽園本店", area:"多久市",
-   cols:["豚骨の土台で、", "何でも来い町中華"],
-   copySize:"9px", nameSize:"13px", areaSize:"6px",
+   cols:["ラーメン、チャンポン、炒飯。", "全部美味い町中華"],
+   copySize:"7.5px", nameSize:"13px", areaSize:"6px",
    pos:"tl", rot:1, stagger:"down", views:"5,672"},
   
   {name:"来久軒", area:"武雄市",
-   cols:["洋食仕込みが生む、", "まろやか乳白豚骨"],
-   copySize:"9px", nameSize:"20px", areaSize:"6px",
+   cols:["洋食仕込みの、", "まろやか乳白"],
+   copySize:"9.5px", nameSize:"20px", areaSize:"6px",
    pos:"tr", rot:3, stagger:"down", views:"7,234"},
   
   {name:"東洋軒", area:"佐賀市",
-   cols:["昭和から令和まで、", "母から娘へ三代の味"],
-   copySize:"8.5px", nameSize:"20px", areaSize:"6px",
+   cols:["三代の女性が継ぐ、", "優しい豚骨"],
+   copySize:"9px", nameSize:"20px", areaSize:"6px",
    pos:"tl", rot:-1.5, stagger:"down", views:"1.1万"},
   
   {name:"夢の一歩 佐賀店", area:"佐賀市",
-   cols:["野菜・ニンニク・背脂、", "コール一発の山盛り"],
+   cols:["野菜・ニンニク・背脂、", "コール一発"],
    copySize:"8.5px", nameSize:"11px", areaSize:"6px",
    pos:"tr", rot:-3, stagger:"up", views:"1.8万"},
   
   {name:"民芸茶屋シャローム", area:"佐賀市",
-   cols:["1953年に暖簾を上げた、", "佐賀ラーメンの最古参"],
-   copySize:"8.5px", nameSize:"10px", areaSize:"6px",
+   cols:["あっさり白濁に、", "和だしの清涼麺"],
+   copySize:"9px", nameSize:"10px", areaSize:"6px",
    pos:"tl", rot:2, stagger:"down", views:"9,824"},
   
   {name:"丸幸ラーメンセンター", area:"基山町",
-   cols:["豚骨100%を強火で炊いた、", "久留米系の一杯"],
-   copySize:"8px", nameSize:"9px", areaSize:"6px",
+   cols:["ドライバーが愛した、", "国道沿いの大豚骨"],
+   copySize:"9px", nameSize:"9px", areaSize:"6px",
    pos:"tr", rot:1.5, stagger:"up", views:"1.4万"},
   
   {name:"佐賀秀ちゃんラーメン", area:"白石町",
-   cols:["力強い豚骨に、", "佐賀屈指の極細ストレート"],
-   copySize:"8.5px", nameSize:"9px", areaSize:"6px",
+   cols:["力強い豚骨と、", "佐賀屈指の極細麺"],
+   copySize:"9px", nameSize:"9px", areaSize:"6px",
    pos:"tl", rot:-2.5, stagger:"down", views:"7,891"}
 ];
 
