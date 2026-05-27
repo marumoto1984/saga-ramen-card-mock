@@ -1,0 +1,418 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SAGAラーメン｜インスタプレビュー</title>
+<style>
+  :root{
+    --ink:#1a1410;
+    --bg:#e8e6e1;
+    --bowl:#3a3833;
+    --ig-line:#dbdbdb;
+    --ig-text:#262626;
+    --ig-sub:#737373;
+  }
+  *{box-sizing:border-box;margin:0;padding:0;-webkit-font-smoothing:antialiased}
+  body{
+    font-family:-apple-system, BlinkMacSystemFont, "Helvetica Neue", "Noto Sans CJK JP", sans-serif;
+    background:#f0f0f0;
+    min-height:100vh;
+    padding:40px 20px 60px;
+    color:var(--ig-text);
+  }
+
+  /* iPhoneフレーム */
+  .phone{
+    max-width:420px;
+    margin:0 auto;
+    background:#fff;
+    border-radius:48px;
+    box-shadow:0 30px 80px -20px rgba(0,0,0,.35), 0 10px 30px -10px rgba(0,0,0,.2);
+    overflow:hidden;
+    border:10px solid #1a1410;
+    position:relative;
+  }
+
+  /* ステータスバー */
+  .statusbar{
+    display:flex;justify-content:space-between;align-items:center;
+    padding:14px 28px 8px;
+    font-size:15px;font-weight:600;
+    background:#fff;
+  }
+  .statusbar .right{display:flex;align-items:center;gap:6px}
+  .statusbar svg{display:block}
+
+  /* インスタヘッダー（プロフィール名） */
+  .ig-header{
+    display:flex;align-items:center;justify-content:space-between;
+    padding:8px 16px 14px;
+    border-bottom:1px solid var(--ig-line);
+  }
+  .ig-username{display:flex;align-items:center;gap:6px;font-size:18px;font-weight:700}
+  .ig-username .lock{font-size:13px}
+  .ig-username .down{font-size:12px;color:var(--ig-sub)}
+  .ig-icons{display:flex;gap:18px;font-size:22px}
+
+  /* プロフィール情報 */
+  .profile{padding:14px 16px 6px}
+  .profile-top{display:flex;gap:24px;align-items:center}
+  .avatar{
+    width:80px;height:80px;border-radius:50%;
+    background:#d8d4ce;
+    border:1px solid var(--ig-line);
+    flex-shrink:0;
+  }
+  .stats{display:flex;gap:24px;flex:1;justify-content:space-around}
+  .stat{text-align:center}
+  .stat-num{font-size:17px;font-weight:700}
+  .stat-label{font-size:13px;color:var(--ig-text);margin-top:2px}
+  .bio{padding:10px 0 6px;font-size:14px;line-height:1.4}
+  .bio-name{font-weight:700;margin-bottom:3px}
+  .bio-text{color:var(--ig-text)}
+  .bio-link{color:#003569;font-weight:500}
+  
+  /* ボタン群 */
+  .actions{display:flex;gap:6px;padding:8px 0 14px}
+  .btn{
+    flex:1;padding:7px 0;text-align:center;
+    background:#efefef;border-radius:8px;
+    font-size:14px;font-weight:600;
+  }
+  .btn.primary{background:#0095f6;color:#fff}
+
+  /* ハイライト */
+  .highlights{
+    display:flex;gap:14px;padding:8px 16px 14px;
+    overflow-x:auto;
+  }
+  .hl{display:flex;flex-direction:column;align-items:center;gap:6px;flex-shrink:0}
+  .hl-circle{
+    width:64px;height:64px;border-radius:50%;
+    background:#f0f0f0;border:1px solid var(--ig-line);
+    display:flex;align-items:center;justify-content:center;
+    font-size:11px;color:var(--ig-sub);
+    font-family:"Noto Serif CJK JP",serif;font-weight:700;
+    text-align:center;line-height:1.1;padding:4px;
+  }
+  .hl-label{font-size:12px;color:var(--ig-text)}
+
+  /* タブ */
+  .tabs{
+    display:flex;
+    border-top:1px solid var(--ig-line);
+  }
+  .tab{
+    flex:1;padding:11px 0;
+    display:flex;align-items:center;justify-content:center;
+  }
+  .tab.active{border-bottom:2px solid var(--ig-text)}
+  .tab svg{width:24px;height:24px;color:var(--ig-text);opacity:.4}
+  .tab.active svg{opacity:1}
+
+  /* グリッド */
+  .grid{
+    display:grid;
+    grid-template-columns:repeat(3, 1fr);
+    gap:2px;
+    background:#fff;
+  }
+
+  /* === リールセル === */
+  .reel{
+    position:relative;
+    aspect-ratio:9/16;
+    overflow:hidden;
+    background:var(--bg);
+  }
+  .bowl{
+    position:absolute;
+    left:50%;top:50%;transform:translate(-50%,-50%);
+    width:90%;aspect-ratio:1;border-radius:50%;
+    background:var(--bowl);
+    z-index:1;
+  }
+  .copy{
+    position:absolute;
+    display:flex;
+    flex-direction:row-reverse;
+    gap:3px;
+    z-index:4;
+  }
+  /* 基準位置 */
+  .copy.pos-tr{top:5%;right:5%}
+  .copy.pos-tl{top:5%;left:5%;flex-direction:row}
+  .copy.pos-br{bottom:30%;right:5%}
+  .copy.pos-bl{bottom:30%;left:5%;flex-direction:row}
+  
+  .copy .col{
+    background:#fff;
+    padding:5px 3px;
+    writing-mode:vertical-rl;
+    -webkit-writing-mode:vertical-rl;
+    font-family:"Noto Serif CJK JP",serif;
+    font-weight:700;
+    line-height:1.5;
+    color:var(--ink);
+    letter-spacing:.04em;
+    white-space:nowrap;
+  }
+  /* stagger: 列ごとに段差を付ける */
+  .copy.stagger-down .col:nth-child(2){margin-top:14%}
+  .copy.stagger-down .col:nth-child(3){margin-top:28%}
+  .copy.stagger-up .col:nth-child(2){margin-bottom:14%}
+  .copy.stagger-up .col:nth-child(3){margin-bottom:28%}
+  .name-box{
+    position:absolute;
+    left:6%;right:6%;
+    bottom:13%;
+    background:#fff;
+    text-align:center;
+    padding:5px 4px;
+    z-index:4;
+  }
+  .name{
+    font-family:"Noto Serif CJK JP",serif;
+    font-weight:700;
+    color:var(--ink);
+    line-height:1;
+    letter-spacing:.02em;
+    white-space:nowrap;
+  }
+  .area{
+    position:absolute;
+    left:0;right:0;bottom:7%;
+    text-align:center;
+    font-family:"Noto Serif CJK JP",serif;
+    color:var(--ink);
+    letter-spacing:.1em;
+    font-weight:500;
+    z-index:4;
+  }
+  .area::before,.area::after{content:"-";margin:0 .2em}
+
+  /* リール再生アイコン（右上） */
+  .reel-icon{
+    position:absolute;
+    top:6px;right:6px;
+    color:#fff;
+    z-index:5;
+    filter:drop-shadow(0 1px 2px rgba(0,0,0,.4));
+  }
+  /* 再生回数（左下） */
+  .play-count{
+    position:absolute;
+    bottom:6px;left:6px;
+    color:#fff;
+    font-size:11px;font-weight:600;
+    display:flex;align-items:center;gap:3px;
+    z-index:5;
+    filter:drop-shadow(0 1px 2px rgba(0,0,0,.4));
+  }
+
+  /* 下部ナビ */
+  .bottom-nav{
+    display:flex;justify-content:space-around;
+    padding:12px 0 20px;
+    border-top:1px solid var(--ig-line);
+    background:#fff;
+  }
+  .bottom-nav svg{width:26px;height:26px}
+  .bottom-nav .me{
+    width:26px;height:26px;border-radius:50%;
+    background:linear-gradient(135deg, #e8e6e1, #3a3833);
+  }
+
+  /* タイトル */
+  .page-title{
+    max-width:420px;margin:0 auto 18px;
+    text-align:center;
+  }
+  .page-title h1{
+    font-size:18px;font-weight:700;color:#333;letter-spacing:.06em;
+  }
+  .page-title p{
+    font-size:13px;color:#777;margin-top:4px;
+  }
+</style>
+</head>
+<body>
+<div class="page-title">
+  <h1>SAGA RAMEN ／ Instagram Profile Preview</h1>
+  <p>リールタブに14枚並んだ状態</p>
+</div>
+<div class="phone">
+  <!-- ステータスバー -->
+  <div class="statusbar">
+    <span>9:41</span>
+    <div class="right">
+      <svg width="18" height="11" viewBox="0 0 18 11" fill="currentColor"><rect x="0" y="6" width="3" height="5" rx="1"/><rect x="5" y="4" width="3" height="7" rx="1"/><rect x="10" y="2" width="3" height="9" rx="1"/><rect x="15" y="0" width="3" height="11" rx="1"/></svg>
+      <svg width="16" height="11" viewBox="0 0 16 11" fill="currentColor"><path d="M8 2.5C5.5 2.5 3.3 3.5 1.5 5L0 3.5C2.2 1.3 5 0 8 0s5.8 1.3 8 3.5L14.5 5C12.7 3.5 10.5 2.5 8 2.5zM8 6.5c-1.4 0-2.7.5-3.7 1.4L2.9 6.4c1.4-1.3 3.2-2 5.1-2s3.7.7 5.1 2l-1.4 1.5C10.7 7 9.4 6.5 8 6.5zM8 11l-2.1-2.1c.6-.5 1.3-.8 2.1-.8s1.5.3 2.1.8L8 11z"/></svg>
+      <svg width="26" height="11" viewBox="0 0 26 11" fill="none" stroke="currentColor" stroke-width="1"><rect x="0.5" y="0.5" width="22" height="10" rx="2.5"/><rect x="2" y="2" width="17" height="7" rx="1" fill="currentColor"/><path d="M24 4v3" stroke-width="1.5" stroke-linecap="round"/></svg>
+    </div>
+  </div>
+
+  <!-- ヘッダー -->
+  <div class="ig-header">
+    <div class="ig-username">
+      <span class="lock">🔒</span>
+      <span>saga_ramen_project</span>
+      <span class="down">▼</span>
+    </div>
+    <div class="ig-icons">
+      <span>＋</span><span>≡</span>
+    </div>
+  </div>
+
+  <!-- プロフィール -->
+  <div class="profile">
+    <div class="profile-top">
+      <div class="avatar"></div>
+      <div class="stats">
+        <div class="stat"><div class="stat-num">37</div><div class="stat-label">投稿</div></div>
+        <div class="stat"><div class="stat-num">520</div><div class="stat-label">フォロワー</div></div>
+        <div class="stat"><div class="stat-num">13</div><div class="stat-label">フォロー中</div></div>
+      </div>
+    </div>
+    <div class="bio">
+      <div class="bio-name">SAGAラーメンプロジェクト</div>
+      <div class="bio-text">佐賀県では飲食産業ブランド化プロジェクトの第1弾として、佐賀県のラーメンのブランディングに取り組んでいます。<br>👉 詳しくは以下の公式サイトをチェック！<br>📣 メッセージも以下のフォームから！</div>
+      <div class="bio-link">🔗 saga-ramen.jpと他2人</div>
+    </div>
+    <div class="actions">
+      <div class="btn primary">フォロー</div>
+      <div class="btn">メッセージ</div>
+      <div class="btn">▼</div>
+    </div>
+    <div class="highlights">
+      <div class="hl"><div class="hl-circle">佐賀市</div><div class="hl-label">佐賀市</div></div>
+      <div class="hl"><div class="hl-circle">唐津市</div><div class="hl-label">唐津市</div></div>
+      <div class="hl"><div class="hl-circle">鳥栖市</div><div class="hl-label">鳥栖市</div></div>
+      <div class="hl"><div class="hl-circle">武雄市</div><div class="hl-label">武雄市</div></div>
+      <div class="hl"><div class="hl-circle">多久市</div><div class="hl-label">多久市</div></div>
+    </div>
+  </div>
+
+  <!-- タブ -->
+  <div class="tabs">
+    <div class="tab">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/></svg>
+    </div>
+    <div class="tab active">
+      <svg viewBox="0 0 24 24" fill="currentColor"><path d="M21 3H3a2 2 0 00-2 2v14a2 2 0 002 2h18a2 2 0 002-2V5a2 2 0 00-2-2zm-11 13V8l7 4-7 4z"/></svg>
+    </div>
+    <div class="tab">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2L2 8v8l10 6 10-6V8L12 2z"/></svg>
+    </div>
+  </div>
+
+  <!-- グリッド -->
+  <div class="grid" id="grid"></div>
+
+  <!-- 下部ナビ -->
+  <div class="bottom-nav">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/></svg>
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4-4"/></svg>
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="9" cy="9" r="1.5" fill="currentColor"/><path d="M21 15l-5-5L5 21"/></svg>
+    <svg viewBox="0 0 24 24" fill="currentColor"><path d="M21 3H3a2 2 0 00-2 2v14a2 2 0 002 2h18a2 2 0 002-2V5a2 2 0 00-2-2zm-11 13V8l7 4-7 4z"/></svg>
+    <div class="me"></div>
+  </div>
+</div>
+
+<script>
+const reels = [
+  {name:"夢を語れ", area:"鳥栖市",
+   cols:["ガツン、極厚スープに", "沈む太ちぢれ麺"],
+   copySize:"8.5px", nameSize:"14px", areaSize:"6px",
+   pos:"tr", rot:-2, stagger:"down", views:"1.2万"},
+  
+  {name:"らぁ麺 むらまさ", area:"唐津市",
+   cols:["〝ラーメンの鬼〟佐野実が、", "最後に遺した一杯"],
+   copySize:"7.5px", nameSize:"11px", areaSize:"6px",
+   pos:"tl", rot:1.5, stagger:"down", views:"8,341"},
+  
+  {name:"竜里", area:"唐津市",
+   cols:["炊き重ねた豚骨と鶏がら、", "唐津の濃厚"],
+   copySize:"8px", nameSize:"22px", areaSize:"6px",
+   pos:"tr", rot:-1, stagger:"up", views:"6,892"},
+  
+  {name:"マキザラーメン", area:"佐賀市",
+   cols:["野菜×豚骨で仕上げた、", "佐賀の創作ベジポタ"],
+   copySize:"8.5px", nameSize:"12px", areaSize:"6px",
+   pos:"tl", rot:-3, stagger:"down", views:"9,103"},
+  
+  {name:"一休軒", area:"佐賀市",
+   cols:["佐賀ラーメンの原型となり、", "生卵文化をつくりあげた"],
+   copySize:"7.5px", nameSize:"18px", areaSize:"6px",
+   pos:"tr", rot:0, stagger:"down", views:"2.3万"},
+  
+  {name:"ひろちゃんラーメン", area:"佐賀市",
+   cols:["ぐつぐつ泡立つ、", "猛々しい超濃厚"],
+   copySize:"9px", nameSize:"10px", areaSize:"6px",
+   pos:"tl", rot:2.5, stagger:"up", views:"1.5万"},
+  
+  {name:"麺家 ぶらっくぴっぐ", area:"佐賀市",
+   cols:["ゲンコツ砕いた、", "密度の高い豚骨"],
+   copySize:"9px", nameSize:"9px", areaSize:"6px",
+   pos:"tr", rot:-2, stagger:"down", views:"3.1万"},
+  
+  {name:"後楽園本店", area:"多久市",
+   cols:["豚骨の土台で、", "何でも来い町中華"],
+   copySize:"9px", nameSize:"13px", areaSize:"6px",
+   pos:"tl", rot:1, stagger:"down", views:"5,672"},
+  
+  {name:"来久軒", area:"武雄市",
+   cols:["洋食仕込みが生む、", "まろやか乳白豚骨"],
+   copySize:"9px", nameSize:"20px", areaSize:"6px",
+   pos:"tr", rot:3, stagger:"down", views:"7,234"},
+  
+  {name:"東洋軒", area:"佐賀市",
+   cols:["昭和から令和まで、", "母から娘へ三代の味"],
+   copySize:"8.5px", nameSize:"20px", areaSize:"6px",
+   pos:"tl", rot:-1.5, stagger:"down", views:"1.1万"},
+  
+  {name:"夢の一歩 佐賀店", area:"佐賀市",
+   cols:["野菜・ニンニク・背脂、", "コール一発の山盛り"],
+   copySize:"8.5px", nameSize:"11px", areaSize:"6px",
+   pos:"tr", rot:-3, stagger:"up", views:"1.8万"},
+  
+  {name:"民芸茶屋シャローム", area:"佐賀市",
+   cols:["1953年に暖簾を上げた、", "佐賀ラーメンの最古参"],
+   copySize:"8.5px", nameSize:"10px", areaSize:"6px",
+   pos:"tl", rot:2, stagger:"down", views:"9,824"},
+  
+  {name:"丸幸ラーメンセンター", area:"基山町",
+   cols:["豚骨100%を強火で炊いた、", "久留米系の一杯"],
+   copySize:"8px", nameSize:"9px", areaSize:"6px",
+   pos:"tr", rot:1.5, stagger:"up", views:"1.4万"},
+  
+  {name:"佐賀秀ちゃんラーメン", area:"白石町",
+   cols:["力強い豚骨に、", "佐賀屈指の極細ストレート"],
+   copySize:"8.5px", nameSize:"9px", areaSize:"6px",
+   pos:"tl", rot:-2.5, stagger:"down", views:"7,891"}
+];
+
+const reelIconSVG = `<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2"><path d="M21 3H3a2 2 0 00-2 2v14a2 2 0 002 2h18a2 2 0 002-2V5a2 2 0 00-2-2z"/><path d="M10 8l7 4-7 4V8z" fill="white"/></svg>`;
+const playIconSVG = `<svg width="11" height="11" viewBox="0 0 24 24" fill="white"><path d="M8 5v14l11-7z"/></svg>`;
+
+function reelHTML(r){
+  const colsHTML = r.cols.map(c => `<div class="col">${c}</div>`).join("");
+  return `<div class="reel">
+    <div class="bowl"></div>
+    <div class="copy pos-${r.pos} stagger-${r.stagger}" style="font-size:${r.copySize};transform:rotate(${r.rot}deg)">
+      ${colsHTML}
+    </div>
+    <div class="name-box">
+      <div class="name" style="font-size:${r.nameSize}">${r.name}</div>
+    </div>
+    <div class="area" style="font-size:${r.areaSize}">${r.area}</div>
+    <div class="reel-icon">${reelIconSVG}</div>
+    <div class="play-count">${playIconSVG}<span>${r.views}</span></div>
+  </div>`;
+}
+
+document.getElementById("grid").innerHTML = reels.map(reelHTML).join("");
+</script>
+</body>
+</html>
